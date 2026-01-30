@@ -8,6 +8,7 @@ on:
       - 'Dockerfile'
       - 'Makefile'
       - 'requirements.txt'
+      - 'bin/**'
       - '.github/workflows/docker-build.yml'
   pull_request:
     branches:
@@ -16,6 +17,7 @@ on:
       - 'Dockerfile'
       - 'Makefile'
       - 'requirements.txt'
+      - 'bin/**'
       - '.github/workflows/docker-build.yml'
   workflow_dispatch:
 
@@ -58,7 +60,7 @@ jobs:
           tags: |
             type=ref,event=branch
             type=ref,event=pr
-            type=sha,prefix=
+            type=sha,prefix=sha-
             type=raw,value=latest,enable={{is_default_branch}}
 
       - name: Build and push Docker image
@@ -78,10 +80,8 @@ jobs:
           DIGEST: ${{ steps.build-and-push.outputs.digest }}
           TAGS: ${{ steps.meta.outputs.tags }}
         run: |
-          echo "${TAGS}" | while read -r tag; do
-            if [ -n "${tag}" ]; then
-              cosign sign --yes "${tag}@${DIGEST}"
-            fi
+          echo "${TAGS}" | grep -v '^$' | while read -r tag; do
+            cosign sign --yes "${tag}@${DIGEST}"
           done
 
       - name: Generate artifact attestation

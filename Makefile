@@ -29,10 +29,10 @@ ls:
 
 install_latex:
 	$(SUDO) apt-get update
-	$(SUDO) apt-get install texlive-full
-	$(SUDO) apt-get install latexmk
-	$(SUDO) apt-get install bibtool
-	$(SUDO) apt-get install biber
+	$(SUDO) apt-get install -y texlive-full
+	$(SUDO) apt-get install -y latexmk
+	$(SUDO) apt-get install -y bibtool
+	$(SUDO) apt-get install -y biber
 	$(SUDO) apt-get update
 	biber --version
 	latexmk --version

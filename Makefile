@@ -3,9 +3,16 @@ SUDO := $(shell command -v sudo >/dev/null 2>&1 && echo sudo || echo)
 
 BASE=.
 
-FILES=${BASE}/source/benchmarks.yaml,${BASE}/source/benchmarks-addon.yaml 
+# Dynamically discover benchmark YAML files in the source directory.
+# Includes: benchmarks.yaml and benchmarks-*.yaml files
+# Excludes: -excluded, -format, -sample patterns and verified_urls.yaml
+FILES := $(shell find ${BASE}/source -maxdepth 1 -name 'benchmarks*.yaml' \
+    ! -name '*-excluded*' \
+    ! -name '*-format*' \
+    ! -name '*-sample*' \
+    -type f 2>/dev/null | sort | paste -sd',' -)
 
-CHECK_FILES=${BASE}/source/benchmarks.yaml,${BASE}/source/benchmarks-addon.yaml 
+CHECK_FILES := $(FILES)
 
 SCRIPT=bin/generate.py
 

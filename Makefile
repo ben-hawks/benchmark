@@ -4,13 +4,9 @@ SUDO := $(shell command -v sudo >/dev/null 2>&1 && echo sudo || echo)
 BASE=.
 
 # Dynamically discover benchmark YAML files in the source directory.
-# Includes files matching: benchmarks.yaml and benchmarks-*.yaml
-# Excludes files containing: -excluded, -format, -sample in filename
+# Includes files matching: benchmark-*.yaml
 # Note: Other files like verified_urls.yaml and index.md are excluded by not matching the pattern.
-FILES := $(shell find ${BASE}/source -maxdepth 1 -name 'benchmarks*.yaml' \
-    ! -name '*-excluded*' \
-    ! -name '*-format*' \
-    ! -name '*-sample*' \
+FILES := $(shell find ${BASE}/source -maxdepth 1 -name 'benchmark-*.yaml' \
     -type f 2>/dev/null | sort | paste -sd',' -)
 
 CHECK_FILES := $(FILES)
